@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anh có điều muốn nói</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #000;
+        }
+
+        .background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            /* Thay link ảnh trong ngoặc đơn bằng link ảnh bạn thích */
+            background-image: url('https://images.unsplash.com/photo-1518621736915-f3b1c41bfd00?q=80&w=1080&auto=format&fit=crop'); 
+            background-size: cover;
+            background-position: center;
+            z-index: 1;
+            filter: brightness(0.7);
+        }
+
+        .main-content {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+        }
+
+        h1 {
+            color: #ff33ff;
+            font-size: 3.5rem;
+            text-shadow: 0 0 10px #ff33ff, 0 0 20px #ff33ff, 2px 2px 4px #000;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .btn-click {
+            background-color: #ff66b2;
+            color: white;
+            font-size: 1.5rem;
+            font-weight: bold;
+            padding: 15px 40px;
+            border: 2px solid #fff;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 15px #ff66b2;
+            transition: all 0.2s;
+        }
+
+        .btn-click:hover {
+            background-color: #ff3399;
+            transform: scale(1.1);
+        }
+
+        .popup-window {
+            position: absolute;
+            width: 250px;
+            background: rgba(255, 255, 255, 0.9);
+            border: 1px solid #ff99cc;
+            border-radius: 8px;
+            box-shadow: 3px 3px 15px rgba(0,0,0,0.4);
+            z-index: 20;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            animation: popIn 0.2s ease-out forwards;
+        }
+
+        @keyframes popIn {
+            from { transform: scale(0.5); opacity: 0; }
+            to { transform: scale(1); opacity: 1; }
+        }
+
+        .popup-header {
+            background: rgba(255, 182, 193, 0.95);
+            padding: 8px 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: #333;
+            border-bottom: 1px solid #ff99cc;
+        }
+
+        .popup-controls {
+            font-size: 1.2rem;
+            line-height: 1;
+            cursor: pointer;
+        }
+
+        .popup-body {
+            padding: 20px;
+            text-align: center;
+            color: #d81b60;
+            font-size: 1.3rem;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="background"></div>
+
+    <!-- Gọi file nhạc -->
+    <audio id="bg-music" src="nhac-nen.mp3"></audio>
+
+    <div class="main-content">
+        <h1>Anh có điều<br>muốn nói</h1>
+        <button class="btn-click" id="btn-start">Nhấn đây nè</button>
+    </div>
+
+    <div id="popup-container"></div>
+
+    <script>
+        const btnStart = document.getElementById('btn-start');
+        const popupContainer = document.getElementById('popup-container');
+        const bgMusic = document.getElementById('bg-music');
+
+        btnStart.addEventListener('click', function() {
+            // Lệnh phát nhạc
+            if(bgMusic.src && bgMusic.src !== window.location.href) {
+                bgMusic.play();
+            }
+
+            let count = 0;
+            const maxPopups = 60; 
+
+            const interval = setInterval(() => {
+                if (count >= maxPopups) {
+                    clearInterval(interval);
+                    return;
+                }
+                createPopup();
+                count++;
+            }, 120); 
+        });
+
+        function createPopup() {
+            const popup = document.createElement('div');
+            popup.className = 'popup-window';
+
+            const randomX = Math.random() * (window.innerWidth - 260);
+            const randomY = Math.random() * (window.innerHeight - 120);
+
+            popup.style.left = `${Math.max(0, randomX)}px`;
+            popup.style.top = `${Math.max(0, randomY)}px`;
+
+            popup.innerHTML = `
+                <div class="popup-header">
+                    <span>Tràn ngập bộ nhớ</span>
+                    <span class="popup-controls">−</span>
+                </div>
+                <div class="popup-body">
+                    Anh nhớ em ❤️
+                </div>
+            `;
+
+            popupContainer.appendChild(popup);
+        }
+    </script>
+</body>
+</html>
